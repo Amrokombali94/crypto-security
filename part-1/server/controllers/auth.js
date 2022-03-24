@@ -12,14 +12,14 @@ module.exports = {
       let loggedUser={}
       
       for (let i = 0; i < users.length; i++) {
-        if (users[i].username === username && user[i].passwordHash === password) {
+        if (users[i].username === username) {
           const existing = bcrypt.compareSync(password, users[i].passwordHash)
           if(existing){
              loggedUser = {...users[i]}
+             delete loggedUser.password
+             res.status(200).send(loggedUser)
 
           }
-          delete loggedUser.password
-          res.status(200).send(loggedUser)
         }
       }
       res.status(400).send("User not found.")
@@ -27,19 +27,19 @@ module.exports = {
     register: (req, res) => {
       const { username, email, firstName, lastName, password } = req.body
 
-      for(let i=0; i < users.length; i++){
-        const existing = bcrypt.compareSync(password, users[i].passwordHash)
-        if(existing) {
-          users[i].firstName=firstName
-          users[i].lastName=lastName
-          users[i].email=email
-          users[i].username=username
-          let returnUsers = {...users[i]}
-          delete returnUsers.passwordHash
-          res.status(200).send(returnUsers)
-          return
-        }
-      }
+      // for(let i=0; i < users.length; i++){
+      //   const existing = bcrypt.compareSync(password, users[i].passwordHash)
+      //   if(existing) {
+      //     users[i].firstName=firstName
+      //     users[i].lastName=lastName
+      //     users[i].email=email
+      //     users[i].username=username
+      //     let returnUsers = {...users[i]}
+      //     delete returnUsers.passwordHash
+      //     res.status(200).send(returnUsers)
+      //     return
+      //   }
+      // }
 
       const salt = bcrypt.genSaltSync(5)
 
@@ -56,12 +56,12 @@ module.exports = {
 
       users.push(user)
 
-      // let returnUsers = {...users}
+      let returnUsers = {...users}
       // console.log(returnUsers)
 
-      delete user.passwordHash
+      delete returnUsers.passwordHash
 
-      res.status(200).send(user)
+      res.status(200).send(returnUsers)
 
         // console.log('Registering User')
         // console.log(req.body)
