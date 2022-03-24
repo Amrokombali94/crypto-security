@@ -14,4 +14,4 @@ const {
 app.post(`/api/login`, login)
 app.post(`/api/register`, register)
 
-app.listen(4004, () => console.log(`running on 4004`))
+app.listen(4004, () => console.log(`running on port 4004`))
